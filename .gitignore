@@ -167,3 +167,4 @@ cython_debug/
 
 # Database
 *.sqlite3
+locallibrary/catalog/migrations/*.py
