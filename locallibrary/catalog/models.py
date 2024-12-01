@@ -1,10 +1,16 @@
 from django.db import models
 
+import uuid  # Required for unique book instances
+from datetime import date
+
+from django.conf import settings  # Required to assign User as a borrower
 # Create your models here.
 
 from django.urls import reverse  # To generate URLS by reversing URL patterns
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
+
+
 
 class Genre(models.Model):
     """Model representing a book genre (e.g. Science Fiction, Non Fiction)."""
@@ -98,10 +104,7 @@ class Book(models.Model):
         return self.title
 
 
-import uuid  # Required for unique book instances
-from datetime import date
 
-from django.conf import settings  # Required to assign User as a borrower
 
 
 class BookInstance(models.Model):
@@ -144,6 +147,11 @@ class BookInstance(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.id} ({self.book.title})'
+
+    @property
+    def is_overdue(self):
+        """Determines if the book is overdue based on due date and current date."""
+        return bool(self.due_back and date.today() > self.due_back)
 
 
 class Author(models.Model):
